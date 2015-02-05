@@ -27,7 +27,7 @@ class MissingConfiguratorException extends \LogicException
  * @package Kappa\DoctrineMPTT
  * @author Ondřej Záruba <http://zaruba-ondrej.cz>
  */
-class MissingClassNamespace extends \LogicException
+class MissingClassNamespaceException extends \LogicException
 {
 
 }
