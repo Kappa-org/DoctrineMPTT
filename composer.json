@@ -27,6 +27,9 @@
   "autoload": {
     "psr-4": {
       "Kappa\\DoctrineMPTT\\": "src/"
-    }
+    },
+    "classmap": [
+      "src/exceptions.php"
+    ]
   }
 }
