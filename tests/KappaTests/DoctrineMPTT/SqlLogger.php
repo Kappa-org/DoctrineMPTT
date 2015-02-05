@@ -18,7 +18,26 @@ namespace KappaTests\DoctrineMPTT;
  */
 class SqlLogger implements \Doctrine\DBAL\Logging\SQLLogger
 {
+	/** @var array */
 	private $queries = [];
+
+	/** @var string */
+	private $section = "initialize";
+
+	/** @var string */
+	private $directory;
+
+	/**
+	 * @param $directory
+	 * @throws \Exception
+	 */
+	public function __construct($directory)
+	{
+		if (!file_exists($directory)) {
+			throw new \Exception("Missing directory");
+		}
+		$this->directory = $directory;
+	}
 
 	/**
 	 * Logs a SQL statement somewhere.
@@ -31,7 +50,11 @@ class SqlLogger implements \Doctrine\DBAL\Logging\SQLLogger
 	 */
 	public function startQuery($sql, array $params = null, array $types = null)
 	{
-		$this->queries[] = $sql;
+		if (array_key_exists($this->section, $this->queries)) {
+			$this->queries[$this->section][] = $sql;
+		} else {
+			$this->queries[$this->section] = [$sql];
+		}
 	}
 
 	/**
@@ -41,11 +64,21 @@ class SqlLogger implements \Doctrine\DBAL\Logging\SQLLogger
 	 */
 	public function stopQuery()
 	{
-
 	}
 
-	public function getQueries()
+	public function startSection()
 	{
-		return $this->queries;
+		$trace = debug_backtrace();
+		$this->section = $trace[1]['function'];
+	}
+
+	public function stopSection()
+	{
+		$content = '';
+		foreach ($this->queries[$this->section] as $key => $sql) {
+			$content .= $key + 1 . " => " . $sql . PHP_EOL;
+		}
+
+		file_put_contents($this->directory . DIRECTORY_SEPARATOR . $this->section . '.log', $content);
 	}
 }
