@@ -31,3 +31,14 @@ class MissingClassNamespace extends \LogicException
 {
 
 }
+
+/**
+ * Class InvalidArgumentException
+ *
+ * @package Kappa\DoctrineMPTT
+ * @author Ondřej Záruba <http://zaruba-ondrej.cz>
+ */
+class InvalidArgumentException extends \LogicException
+{
+
+}
