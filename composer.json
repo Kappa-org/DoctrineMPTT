@@ -22,6 +22,7 @@
   },
   "require-dev": {
     "nette/nette": "~2.2@dev",
+    "doctrine/data-fixtures": "~1.0",
     "nette/tester": "~1.0"
   },
   "autoload": {
