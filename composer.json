@@ -15,6 +15,10 @@
     "email": "zarubaondra@gmail.com",
     "issues": "https://github.com/Kappa-org/DoctrineMPTT/issues"
   },
+  "require": {
+    "nette/di": "~2.2@dev",
+    "nette/utils": "~2.2@dev"
+  },
   "require-dev": {
     "nette/tester": "~1.0"
   },
