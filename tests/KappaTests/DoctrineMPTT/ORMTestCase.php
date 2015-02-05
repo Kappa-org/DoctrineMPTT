@@ -31,11 +31,15 @@ class ORMTestCase extends DITestCase
 	/** @var \Kdyby\Doctrine\EntityRepository */
 	protected $repository;
 
+	/** @var \KappaTests\DoctrineMPTT\SqlLogger */
+	protected $sqlLogger;
+
 	protected function setUp()
 	{
 		parent::setUp();
+		$this->sqlLogger = new SqlLogger(__DIR__ . '/../../logs');
 		$this->em = $this->container->getByType('Kdyby\Doctrine\EntityManager');
-		$this->em->getConnection()->getConfiguration()->setSQLLogger(new SqlLogger());
+		$this->em->getConnection()->getConfiguration()->setSQLLogger($this->sqlLogger);
 		$this->repository = $this->em->getRepository('KappaTests\DoctrineMPTT\Mocks\Entity');
 		$this->createSchema();
 		$this->loadFixtures();
