@@ -22,13 +22,13 @@ trait Traversable
 	 * @ORM\Column(type="integer")
 	 * @var int
 	 */
-	protected $left;
+	protected $lft;
 
 	/**
 	 * @ORM\Column(type="integer")
 	 * @var int
 	 */
-	protected $right;
+	protected $rgt;
 
 	/**
 	 * @ORM\Column(type="integer")
@@ -41,7 +41,7 @@ trait Traversable
 	 */
 	public function getLeft()
 	{
-		return $this->left;
+		return $this->lft;
 	}
 
 	/**
@@ -50,7 +50,7 @@ trait Traversable
 	 */
 	public function setLeft($left)
 	{
-		$this->left = $left;
+		$this->lft = $left;
 
 		return $this;
 	}
@@ -60,7 +60,7 @@ trait Traversable
 	 */
 	public function getRight()
 	{
-		return $this->right;
+		return $this->rgt;
 	}
 
 	/**
@@ -69,7 +69,7 @@ trait Traversable
 	 */
 	public function setRight($right)
 	{
-		$this->right = $right;
+		$this->rgt = $right;
 
 		return $this;
 	}
