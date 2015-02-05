@@ -17,7 +17,8 @@
   },
   "require": {
     "nette/di": "~2.2@dev",
-    "nette/utils": "~2.2@dev"
+    "nette/utils": "~2.2@dev",
+    "kappa/doctrine": "3.0.*-dev"
   },
   "require-dev": {
     "nette/tester": "~1.0"
