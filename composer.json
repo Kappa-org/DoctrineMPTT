@@ -21,6 +21,7 @@
     "kappa/doctrine": "3.0.*-dev"
   },
   "require-dev": {
+    "nette/nette": "~2.2@dev",
     "nette/tester": "~1.0"
   },
   "autoload": {
