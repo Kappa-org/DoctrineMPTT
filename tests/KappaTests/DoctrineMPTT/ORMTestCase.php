@@ -10,7 +10,12 @@
 
 namespace KappaTests\DoctrineMPTT;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Tools\SchemaTool;
+use KappaTests\DoctrineMPTT\Mocks\Fixtures\LoadDefaultSchema;
 
 /**
  * Class ORMTestCase
@@ -30,8 +35,10 @@ class ORMTestCase extends DITestCase
 	{
 		parent::setUp();
 		$this->em = $this->container->getByType('Kdyby\Doctrine\EntityManager');
-		$this->createSchema();
+		$this->em->getConnection()->getConfiguration()->setSQLLogger(new SqlLogger());
 		$this->repository = $this->em->getRepository('KappaTests\DoctrineMPTT\Mocks\Entity');
+		$this->createSchema();
+		$this->loadFixtures();
 	}
 
 	private function createSchema()
@@ -42,5 +49,14 @@ class ORMTestCase extends DITestCase
 		$schemaTool = new SchemaTool($this->em);
 		$schemaTool->dropSchema($classes);
 		$schemaTool->createSchema($classes);
+	}
+
+	private function loadFixtures()
+	{
+		$loader = new Loader();
+		$loader->addFixture(new LoadDefaultSchema());
+		$purger = new ORMPurger();
+		$executor = new ORMExecutor($this->em, $purger);
+		$executor->execute($loader->getFixtures());
 	}
 }
