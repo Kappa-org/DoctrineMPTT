@@ -30,6 +30,17 @@ interface TraversableInterface
 	public function getLeft();
 
 	/**
+	 * @param int $originalLeft
+	 * @return $this
+	 */
+	public function setOriginalLeft($originalLeft);
+
+	/**
+	 * @return int
+	 */
+	public function getOriginalLeft();
+
+	/**
 	 * @param int $right
 	 * @return $this
 	 */

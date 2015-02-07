@@ -26,10 +26,13 @@ class Configurator
 
 	const DEPTH_NAME = 'depthColumnName';
 
+	const ORIGINAL_LEFT_NAME = 'originalLeftName';
+
 	/** @var array */
 	private $data = [
 		self::ENTITY_CLASS => '',
 		self::LEFT_NAME => 'lft',
+		self::ORIGINAL_LEFT_NAME => '_lft',
 		self::RIGHT_NAME => 'rgt',
 		self::DEPTH_NAME => 'depth'
 	];
@@ -51,9 +54,9 @@ class Configurator
 	 */
 	public function set($key, $value)
 	{
-		$consts = [self::ENTITY_CLASS, self::DEPTH_NAME, self::LEFT_NAME, self::RIGHT_NAME];
+		$consts = [self::ENTITY_CLASS, self::DEPTH_NAME, self::LEFT_NAME, self::RIGHT_NAME, self::ORIGINAL_LEFT_NAME];
 		if (!in_array($key, $consts)) {
-			throw new InvalidArgumentException(__METHOD__ . ": Key must be const ENTITY_CLASS, DEPTH_NAME, LEFT_NAME or RIGHT_NAME");
+			throw new InvalidArgumentException(__METHOD__ . ": Key must be const ENTITY_CLASS, DEPTH_NAME, LEFT_NAME, RIGHT_NAME or ORIGINAL_LEFT_NAME");
 		}
 		$this->data[$key] = $value;
 

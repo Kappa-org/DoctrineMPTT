@@ -26,6 +26,11 @@ trait Traversable
 
 	/**
 	 * @ORM\Column(type="integer")
+	 */
+	protected $_lft;
+
+	/**
+	 * @ORM\Column(type="integer")
 	 * @var int
 	 */
 	protected $rgt;
@@ -51,6 +56,26 @@ trait Traversable
 	public function setLeft($left)
 	{
 		$this->lft = $left;
+		$this->setOriginalLeft($left);
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getOriginalLeft()
+	{
+		return $this->_lft;
+	}
+
+	/**
+	 * @param int $originalLeft
+	 * @return $this
+	 */
+	public function setOriginalLeft($originalLeft)
+	{
+		$this->_lft = $originalLeft;
 
 		return $this;
 	}
