@@ -47,7 +47,6 @@ class TraversableManagerTest extends ORMTestCase
 		$this->sqlLogger->startSection();
 		$parent = $this->repository->find(2);
 		$this->traversableManager->insertItem($parent, new Entity());
-		//$this->em->refresh($parent);
 		$expected = [
 			Entity::createWithId(1, 1, 20, 0),
 			Entity::createWithId(2, 2, 7, 1),
@@ -77,8 +76,6 @@ class TraversableManagerTest extends ORMTestCase
 		$actual = $this->repository->find($actual);
 		$related = $this->repository->find($related);
 		$this->traversableManager->moveItem($actual, $related, $moveType);
-		//$this->em->refresh($actual);
-		//$this->em->refresh($related);
 		Assert::equal($expected, $this->repository->findAll());
 		$this->sqlLogger->stopSection();
 	}
