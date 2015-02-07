@@ -54,8 +54,8 @@ class Configurator
 	 */
 	public function set($key, $value)
 	{
-		$consts = [self::ENTITY_CLASS, self::DEPTH_NAME, self::LEFT_NAME, self::RIGHT_NAME, self::ORIGINAL_LEFT_NAME];
-		if (!in_array($key, $consts)) {
+		$constants = [self::ENTITY_CLASS, self::DEPTH_NAME, self::LEFT_NAME, self::RIGHT_NAME, self::ORIGINAL_LEFT_NAME];
+		if (!in_array($key, $constants)) {
 			throw new InvalidArgumentException(__METHOD__ . ": Key must be const ENTITY_CLASS, DEPTH_NAME, LEFT_NAME, RIGHT_NAME or ORIGINAL_LEFT_NAME");
 		}
 		$this->data[$key] = $value;
