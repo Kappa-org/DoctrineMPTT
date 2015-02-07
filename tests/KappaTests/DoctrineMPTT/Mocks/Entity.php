@@ -22,9 +22,15 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  */
 class Entity extends BaseEntity implements TraversableInterface
 {
-	use Identifier;
-
 	use Traversable;
+
+	/**
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
+	 * @var integer
+	 */
+	private $id;
 
 	/**
 	 * @param int $left
@@ -38,6 +44,21 @@ class Entity extends BaseEntity implements TraversableInterface
 		$entity->setLeft($left)
 			->setRight($right)
 			->setDepth($depth);
+
+		return $entity;
+	}
+
+	/**
+	 * @param int $id
+	 * @param int $left
+	 * @param int $right
+	 * @param int $depth
+	 * @return Entity
+	 */
+	public static function createWithId($id, $left, $right, $depth)
+	{
+		$entity = self::createDefault($left, $right, $depth);
+		$entity->id = $id;
 
 		return $entity;
 	}
