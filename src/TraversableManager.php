@@ -13,9 +13,9 @@ namespace Kappa\DoctrineMPTT;
 use Kappa\Doctrine\InvalidArgumentException;
 use Kappa\Doctrine\Queries\QueryExecutor;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
-use Kappa\DoctrineMPTT\QueryObjects\MoveUpdate;
-use Kappa\DoctrineMPTT\QueryObjects\UpdateLeftForInsertItem;
-use Kappa\DoctrineMPTT\QueryObjects\UpdateRightForInsertItem;
+use Kappa\DoctrineMPTT\QueryObjects\Updates\MoveUpdate;
+use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateLeftForInsertItem;
+use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForInsertItem;
 use Kdyby\Doctrine\EntityManager;
 
 class TraversableManager

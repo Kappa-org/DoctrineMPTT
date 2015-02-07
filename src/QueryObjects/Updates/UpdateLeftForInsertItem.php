@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Kappa\DoctrineMPTT\QueryObjects;
+namespace Kappa\DoctrineMPTT\QueryObjects\Updates;
 
 use Kappa\Doctrine\Queries\Executable;
 use Kappa\DoctrineMPTT\Configurator;
