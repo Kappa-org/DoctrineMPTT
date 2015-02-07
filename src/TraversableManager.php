@@ -69,10 +69,11 @@ class TraversableManager
 	/**
 	 * @param TraversableInterface $parent
 	 * @param TraversableInterface $actual
+	 * @param bool $refresh
 	 */
-	public function insertItem(TraversableInterface $parent, TraversableInterface $actual)
+	public function insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh = true)
 	{
-		$this->entityManager->transactional(function () use ($parent, $actual) {
+		$this->entityManager->transactional(function () use ($parent, $actual, $refresh) {
 			$this->executor->execute(new UpdateLeftForInsertItem($this->getConfigurator(), $parent));
 			$this->executor->execute(new UpdateRightForInsertItem($this->configurator, $parent));
 			$actual->setLeft($parent->getRight())
@@ -80,6 +81,10 @@ class TraversableManager
 				->setDepth($parent->getDepth() + 1);
 			$this->entityManager->persist($actual);
 			$this->entityManager->flush();
+			if ($refresh) {
+				$this->entityManager->refresh($parent);
+				$this->entityManager->refresh($actual);
+			}
 		});
 	}
 
@@ -87,9 +92,10 @@ class TraversableManager
 	 * @param TraversableInterface $actual
 	 * @param TraversableInterface $related
 	 * @param int $moveType
+	 * @param bool $refresh
 	 * @throws \InvalidArgumentException
 	 */
-	public function moveItem(TraversableInterface $actual, TraversableInterface $related, $moveType)
+	public function moveItem(TraversableInterface $actual, TraversableInterface $related, $moveType, $refresh = true)
 	{
 		$constants = [self::DESCENDANT, self::PREDECESSOR];
 		if (!in_array($moveType, $constants)) {
@@ -116,6 +122,10 @@ class TraversableManager
 			$this->entityManager->transactional(function () use ($actual, $depth, $move, $min_left, $max_right, $difference) {
 				$this->executor->execute(new MoveUpdate($this->getConfigurator(), $actual, $depth, $move, $min_left, $max_right, $difference));
 			});
+			if ($refresh) {
+				$this->entityManager->refresh($actual);
+				$this->entityManager->refresh($related);
+			}
 		}
 	}
 }
