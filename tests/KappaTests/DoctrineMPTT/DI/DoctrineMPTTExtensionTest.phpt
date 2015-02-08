@@ -12,6 +12,7 @@
 
 namespace Kappa\DoctrineMPTT\Tests;
 
+use Kappa\DoctrineMPTT\Configurator;
 use KappaTests\DoctrineMPTT\DITestCase;
 use Tester\Assert;
 
@@ -37,6 +38,17 @@ class DoctrineMPTTExtensionTest extends DITestCase
 		$service = $this->container->getByType($type);
 		Assert::type($type, $service);
 		Assert::type('Kappa\DoctrineMPTT\Configurator', $service->getConfigurator());
+	}
+
+	public function testConfigurator()
+	{
+		$type = 'Kappa\DoctrineMPTT\Configurator';
+		$configurator = $this->container->getByType($type);
+		Assert::type($type, $configurator);
+		Assert::same('lft', $configurator->get(Configurator::LEFT_NAME));
+		Assert::same('_lft', $configurator->get(Configurator::ORIGINAL_LEFT_NAME));
+		Assert::same('rgt', $configurator->get(Configurator::RIGHT_NAME));
+		Assert::same('depth', $configurator->get(Configurator::DEPTH_NAME));
 	}
 }
 
