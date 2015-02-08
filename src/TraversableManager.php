@@ -21,6 +21,12 @@ use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForDelete;
 use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForInsertItem;
 use Kdyby\Doctrine\EntityManager;
 
+/**
+ * Class TraversableManager
+ *
+ * @package Kappa\DoctrineMPTT
+ * @author Ondřej Záruba <http://zaruba-ondrej.cz>
+ */
 class TraversableManager
 {
 	const PREDECESSOR = 0;
