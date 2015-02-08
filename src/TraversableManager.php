@@ -13,8 +13,11 @@ namespace Kappa\DoctrineMPTT;
 use Kappa\Doctrine\InvalidArgumentException;
 use Kappa\Doctrine\Queries\QueryExecutor;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
+use Kappa\DoctrineMPTT\QueryObjects\Updates\DeleteItemQuery;
 use Kappa\DoctrineMPTT\QueryObjects\Updates\MoveUpdate;
+use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateLeftForDelete;
 use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateLeftForInsertItem;
+use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForDelete;
 use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForInsertItem;
 use Kdyby\Doctrine\EntityManager;
 
@@ -127,5 +130,17 @@ class TraversableManager
 				$this->entityManager->refresh($related);
 			}
 		}
+	}
+
+	/**
+	 * @param TraversableInterface $actual
+	 */
+	public function removeItem(TraversableInterface $actual)
+	{
+		$this->entityManager->transactional(function () use ($actual) {
+			$this->executor->execute(new DeleteItemQuery($this->getConfigurator(), $actual));
+			$this->executor->execute(new UpdateLeftForDelete($this->getConfigurator(), $actual));
+			$this->executor->execute(new UpdateRightForDelete($this->getConfigurator(), $actual));
+		});
 	}
 }

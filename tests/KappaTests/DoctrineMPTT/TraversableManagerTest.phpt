@@ -133,6 +133,60 @@ class TraversableManagerTest extends ORMTestCase
 			]],
 		];
 	}
+
+	/**
+	 * @param int $id
+	 * @param array$expected
+	 * @dataProvider provideRemoveItemData
+	 */
+	public function testRemoveItem($id, array $expected)
+	{
+		$actual = $this->repository->find($id);
+		$this->traversableManager->removeItem($actual);
+		Assert::equal($expected, $this->repository->findAll());
+	}
+
+	public function provideRemoveItemData()
+	{
+		// [id, array expected]
+		return [
+			[1, []],
+			[2, [
+				Entity::createWithId(1, 1, 14, 0),
+				Entity::createWithId(3, 2, 11, 1),
+				Entity::createWithId(4, 12, 13, 1),
+				Entity::createWithId(6, 3, 4, 2),
+				Entity::createWithId(7, 5, 6, 2),
+				Entity::createWithId(8, 7, 10, 2),
+				Entity::createWithId(9, 8, 9, 3),
+			]],
+			[3, [
+				Entity::createWithId(1, 1, 8, 0),
+				Entity::createWithId(2, 2, 5, 1),
+				Entity::createWithId(4, 6, 7, 1),
+				Entity::createWithId(5, 3, 4, 2),
+			]],
+			[6, [
+				Entity::createWithId(1, 1, 16, 0),
+				Entity::createWithId(2, 2, 5, 1),
+				Entity::createWithId(3, 6, 13, 1),
+				Entity::createWithId(4, 14, 15, 1),
+				Entity::createWithId(5, 3, 4, 2),
+				Entity::createWithId(7, 7, 8, 2),
+				Entity::createWithId(8, 9, 12, 2),
+				Entity::createWithId(9, 10, 11, 3),
+			]],
+			[8, [
+				Entity::createWithId(1, 1, 14, 0),
+				Entity::createWithId(2, 2, 5, 1),
+				Entity::createWithId(3, 6, 11, 1),
+				Entity::createWithId(4, 12, 13, 1),
+				Entity::createWithId(5, 3, 4, 2),
+				Entity::createWithId(6, 7, 8, 2),
+				Entity::createWithId(7, 9, 10, 2),
+			]],
+		];
+	}
 }
 
 Environment::lock("database", dirname(TEMP_DIR));
