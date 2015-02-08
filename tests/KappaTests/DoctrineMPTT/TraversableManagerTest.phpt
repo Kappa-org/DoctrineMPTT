@@ -14,6 +14,7 @@ namespace Kappa\DoctrineMPTT\Tests;
 
 use Kappa\Doctrine\Queries\QueryExecutor;
 use Kappa\DoctrineMPTT\Configurator;
+use Kappa\DoctrineMPTT\Queries\QueriesCollector;
 use Kappa\DoctrineMPTT\TraversableManager;
 use KappaTests\DoctrineMPTT\Mocks\Entity;
 use KappaTests\DoctrineMPTT\ORMTestCase;
@@ -36,10 +37,10 @@ class TraversableManagerTest extends ORMTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->traversableManager = new TraversableManager($this->em, new QueryExecutor($this->em));
 		$configurator = new Configurator();
 		$configurator->set(Configurator::ENTITY_CLASS, 'KappaTests\DoctrineMPTT\Mocks\Entity');
-		$this->traversableManager->setConfigurator($configurator);
+		$queriesCollector = new QueriesCollector($configurator);
+		$this->traversableManager = new TraversableManager($this->em, new QueryExecutor($this->em), $queriesCollector);
 	}
 
 	public function testInsertItem()

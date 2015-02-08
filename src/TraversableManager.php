@@ -13,12 +13,7 @@ namespace Kappa\DoctrineMPTT;
 use Kappa\Doctrine\InvalidArgumentException;
 use Kappa\Doctrine\Queries\QueryExecutor;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\DeleteItemQuery;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\MoveUpdate;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateLeftForDelete;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateLeftForInsertItem;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForDelete;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForInsertItem;
+use Kappa\DoctrineMPTT\Queries\QueriesCollector;
 use Kdyby\Doctrine\EntityManager;
 
 /**
@@ -42,14 +37,19 @@ class TraversableManager
 	/** @var QueryExecutor */
 	private $executor;
 
+	/** @var QueriesCollector */
+	private $queriesCollector;
+
 	/**
 	 * @param EntityManager $entityManager
 	 * @param QueryExecutor $executor
+	 * @param QueriesCollector $queriesCollector
 	 */
-	public function __construct(EntityManager $entityManager, QueryExecutor $executor)
+	public function __construct(EntityManager $entityManager, QueryExecutor $executor, QueriesCollector $queriesCollector)
 	{
 		$this->entityManager = $entityManager;
 		$this->executor = $executor;
+		$this->queriesCollector = $queriesCollector;
 	}
 
 	/**
@@ -58,21 +58,9 @@ class TraversableManager
 	 */
 	public function setConfigurator(Configurator $configurator)
 	{
-		$this->configurator = $configurator;
+		$this->queriesCollector->setConfigurator($configurator);
 
 		return $this;
-	}
-
-	/**
-	 * @return Configurator
-	 */
-	public function getConfigurator()
-	{
-		if (!$this->configurator) {
-			throw new MissingConfiguratorException("You must first set configurator with " . __CLASS__ . "::setConfigurator() method");
-		}
-
-		return $this->configurator;
 	}
 
 	/**
@@ -82,9 +70,9 @@ class TraversableManager
 	 */
 	public function insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh = true)
 	{
-		$this->entityManager->transactional(function () use ($parent, $actual, $refresh) {
-			$this->executor->execute(new UpdateLeftForInsertItem($this->getConfigurator(), $parent));
-			$this->executor->execute(new UpdateRightForInsertItem($this->configurator, $parent));
+		$queriesCollection = $this->queriesCollector->getInsertItemQueries($parent);
+		$this->entityManager->transactional(function () use ($queriesCollection, $actual, $parent, $refresh) {
+			$this->executor->execute($queriesCollection);
 			$actual->setLeft($parent->getRight())
 				->setRight($parent->getRight() + 1)
 				->setDepth($parent->getDepth() + 1);
@@ -128,8 +116,9 @@ class TraversableManager
 			if ($left > $actual->getLeft()) {
 				$difference = $difference * -1;
 			}
-			$this->entityManager->transactional(function () use ($actual, $depth, $move, $min_left, $max_right, $difference) {
-				$this->executor->execute(new MoveUpdate($this->getConfigurator(), $actual, $depth, $move, $min_left, $max_right, $difference));
+			$queryCollection = $this->queriesCollector->getMoveItemQueries($actual, $depth, $move, $min_left, $max_right, $difference);
+			$this->entityManager->transactional(function () use ($queryCollection) {
+				$this->executor->execute($queryCollection);
 			});
 			if ($refresh) {
 				$this->entityManager->refresh($actual);
@@ -143,10 +132,9 @@ class TraversableManager
 	 */
 	public function removeItem(TraversableInterface $actual)
 	{
-		$this->entityManager->transactional(function () use ($actual) {
-			$this->executor->execute(new DeleteItemQuery($this->getConfigurator(), $actual));
-			$this->executor->execute(new UpdateLeftForDelete($this->getConfigurator(), $actual));
-			$this->executor->execute(new UpdateRightForDelete($this->getConfigurator(), $actual));
+		$queryCollection = $this->queriesCollector->getRemoveItemQueries($actual);
+		$this->entityManager->transactional(function () use ($queryCollection) {
+			$this->executor->execute($queryCollection);
 		});
 	}
 }

@@ -28,6 +28,12 @@ class DoctrineMPTTExtensionTest extends DITestCase
 	public function testTraversableManager()
 	{
 		$type = 'Kappa\DoctrineMPTT\TraversableManager';
+		Assert::type($type, $this->container->getByType($type));
+	}
+
+	public function testQueryCollector()
+	{
+		$type = 'Kappa\DoctrineMPTT\Queries\QueriesCollector';
 		$service = $this->container->getByType($type);
 		Assert::type($type, $service);
 		Assert::type('Kappa\DoctrineMPTT\Configurator', $service->getConfigurator());
