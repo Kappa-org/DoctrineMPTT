@@ -4,6 +4,7 @@ extensions:
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
 	doctrine: Kdyby\Doctrine\DI\OrmExtension
 	- Kappa\Doctrine\DI\DoctrineExtension
+	- Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
 
 doctrine:
 	user: root
