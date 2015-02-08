@@ -1,7 +1,7 @@
 {
   "name": "kappa/doctrine-mptt",
-  "description": "Modified Preorder Tree Traversal doctrine implementation ",
-  "keywords": ["Doctrine", "MPTT", "Modified Preorder Tree Traversal", "tree", "traversal"],
+  "description": "Modified Pre-order Tree Traversal doctrine implementation ",
+  "keywords": ["Doctrine", "MPTT", "Modified Pre-order Tree Traversal", "tree", "traversal"],
   "homepage": "https://github.com/Kappa-org/DoctrineMPTT",
   "license": "BSD-3-Clause",
   "type": "library",
