@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Kappa\DoctrineMPTT\QueryObjects\Updates;
+namespace Kappa\DoctrineMPTT\Queries\Objects\Manipulators;
 
 use Kappa\Doctrine\Queries\Executable;
 use Kappa\DoctrineMPTT\Configurator;
@@ -17,27 +17,27 @@ use Kappa\DoctrineMPTT\Utils\StringComposer;
 use Kdyby\Doctrine\QueryBuilder;
 
 /**
- * Class UpdateLeftForInsertItem
+ * Class UpdateLeftForDelete
  *
- * @package Kappa\DoctrineMPTT\Queries
+ * @package Kappa\DoctrineMPTT\QueryObjects\Updates
  * @author Ondřej Záruba <http://zaruba-ondrej.cz>
  */
-class UpdateLeftForInsertItem implements Executable
+class UpdateRightForDelete implements Executable
 {
 	/** @var Configurator */
 	private $configurator;
 
 	/** @var TraversableInterface */
-	private $related;
+	private $actual;
 
 	/**
 	 * @param Configurator $configurator
-	 * @param TraversableInterface $related
+	 * @param TraversableInterface $actual
 	 */
-	public function __construct(Configurator $configurator, TraversableInterface $related)
+	public function __construct(Configurator $configurator, TraversableInterface $actual)
 	{
 		$this->configurator = $configurator;
-		$this->related = $related;
+		$this->actual = $actual;
 	}
 
 	/**
@@ -46,16 +46,15 @@ class UpdateLeftForInsertItem implements Executable
 	 */
 	public function build(QueryBuilder $queryBuilder)
 	{
-		$stringComposer = new StringComposer([
-			':leftName' => $this->configurator->get(Configurator::LEFT_NAME),
-			':originalLeftName' => $this->configurator->get(Configurator::ORIGINAL_LEFT_NAME),
-		]);
 		$class = $this->configurator->get(Configurator::ENTITY_CLASS);
+		$stringComposer = new StringComposer([
+			':rightName:' => $this->configurator->get(Configurator::RIGHT_NAME),
+			':difference:' => $this->actual->getRight() - $this->actual->getLeft() + 1
+		]);
 		$queryBuilder->update($class, 'e')
-			->set($stringComposer->compose('e.:leftName'), $stringComposer->compose('e.:leftName + 2'))
-			->set($stringComposer->compose('e.:originalLeftName'), $stringComposer->compose('e.:leftName'))
-			->where($stringComposer->compose('e.:leftName') . ' > :parentRight')
-			->setParameter('parentRight', $this->related->getRight());
+			->set($stringComposer->compose('e.:rightName:'), $stringComposer->compose('e.:rightName: - :difference:'))
+			->where($stringComposer->compose('e.:rightName: > ?0'))
+			->setParameters([$this->actual->getRight()]);
 
 		return $queryBuilder;
 	}

@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Kappa\DoctrineMPTT\QueryObjects\Updates;
+namespace Kappa\DoctrineMPTT\Queries\Objects\Manipulators;
 
 use Kappa\Doctrine\Queries\Executable;
 use Kappa\DoctrineMPTT\Configurator;
@@ -17,12 +17,12 @@ use Kappa\DoctrineMPTT\Utils\StringComposer;
 use Kdyby\Doctrine\QueryBuilder;
 
 /**
- * Class DeleteItemQuery
+ * Class UpdateLeftForDelete
  *
  * @package Kappa\DoctrineMPTT\QueryObjects\Updates
  * @author Ondřej Záruba <http://zaruba-ondrej.cz>
  */
-class DeleteItemQuery implements Executable
+class UpdateLeftForDelete implements Executable
 {
 	/** @var Configurator */
 	private $configurator;
@@ -49,12 +49,14 @@ class DeleteItemQuery implements Executable
 		$class = $this->configurator->get(Configurator::ENTITY_CLASS);
 		$stringComposer = new StringComposer([
 			':leftName:' => $this->configurator->get(Configurator::LEFT_NAME),
-			':rightName:' => $this->configurator->get(Configurator::RIGHT_NAME)
+			':_leftName:' => $this->configurator->get(Configurator::ORIGINAL_LEFT_NAME),
+			':difference:' => $this->actual->getRight() - $this->actual->getLeft() + 1
 		]);
-		$queryBuilder->delete($class, 'e')
-			->where($stringComposer->compose('e.:leftName: >= ?0'))
-			->andWhere($stringComposer->compose('e.:rightName: <= ?1'))
-			->setParameters([$this->actual->getLeft(), $this->actual->getRight()]);
+		$queryBuilder->update($class, 'e')
+			->set($stringComposer->compose('e.:leftName:'), $stringComposer->compose('e.:leftName: - :difference:'))
+			->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:leftName:'))
+			->where($stringComposer->compose('e.:leftName: > ?0'))
+			->setParameters([$this->actual->getRight()]);
 
 		return $queryBuilder;
 	}

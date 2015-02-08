@@ -13,12 +13,12 @@ namespace Kappa\DoctrineMPTT\Queries;
 use Kappa\Doctrine\Queries\ExecutableCollection;
 use Kappa\DoctrineMPTT\Configurator;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\DeleteItemQuery;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\MoveUpdate;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateLeftForDelete;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateLeftForInsertItem;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForDelete;
-use Kappa\DoctrineMPTT\QueryObjects\Updates\UpdateRightForInsertItem;
+use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\DeleteItemQuery;
+use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\MoveUpdate;
+use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateLeftForDelete;
+use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateLeftForInsertItem;
+use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateRightForDelete;
+use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateRightForInsertItem;
 
 /**
  * Class QueriesCollection
