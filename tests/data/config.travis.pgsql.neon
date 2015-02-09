@@ -10,4 +10,4 @@ doctrine:
 	user: root
 	password:
 	dbname: test
-	driver: pdo_mysql
+	driver: pdo_pgsql
