@@ -7,9 +7,14 @@ php:
 
 script: "./tests/run-test.sh"
 
+env:
+        DB=mysql
+        DB=pgsql
+        DB=sqlite
+
 before_script:
         - composer self-update
         - composer install --prefer-source
         - mysql -u root < ./tests/data/database.sql
         - rm ./tests/data/config.neon
-        - cp ./tests/data/config.travis.neon ./tests/data/config.neon
+        - cp ./tests/data/config.travis.$DB.neon ./tests/data/config.neon
