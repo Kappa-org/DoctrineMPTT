@@ -54,7 +54,7 @@ class UpdateLeftForDelete implements Executable
 		]);
 		$queryBuilder->update($class, 'e')
 			->set($stringComposer->compose('e.:leftName:'), $stringComposer->compose('e.:leftName: - :difference:'))
-			->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:leftName:'))
+			->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:_leftName: - :difference:'))
 			->where($stringComposer->compose('e.:leftName: > ?0'))
 			->setParameters([$this->actual->getRight()]);
 
