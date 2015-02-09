@@ -28,8 +28,8 @@ extensions:
 ## Benefits
 
 1. Minimize count of queries. For delete is needed 3 queries (1x `DELETE`, 2x `UPDATE`), for 
-create is needed 3 queries (1x `INSERT`, 2x `UPDATE`) and for move item is needed *only 1x `UPDATE`
-query*. This algorithm is much faster and more fuel efficient than other commonly used methods, such as
+create is needed 3 queries (1x `INSERT`, 2x `UPDATE`) and for move item is needed **only 1x `UPDATE`
+query**. This algorithm is much faster and more fuel efficient than other commonly used methods, such as
 classical parent - children method.
 2. Full control over the nesting depth or count of branches
 
