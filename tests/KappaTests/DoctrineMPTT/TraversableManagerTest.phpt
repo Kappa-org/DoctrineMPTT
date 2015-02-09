@@ -60,7 +60,7 @@ class TraversableManagerTest extends ORMTestCase
 			Entity::createWithId(9, 14, 15, 3),
 			Entity::createWithId(10, 5, 6, 2),
 		];
-		Assert::equal($expected, $this->repository->findAll());
+		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 		$this->sqlLogger->stopSection();
 	}
 
@@ -77,7 +77,7 @@ class TraversableManagerTest extends ORMTestCase
 		$actual = $this->repository->find($actual);
 		$related = $this->repository->find($related);
 		$this->traversableManager->moveItem($actual, $related, $moveType);
-		Assert::equal($expected, $this->repository->findAll());
+		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 		$this->sqlLogger->stopSection();
 	}
 
@@ -144,7 +144,7 @@ class TraversableManagerTest extends ORMTestCase
 	{
 		$actual = $this->repository->find($id);
 		$this->traversableManager->removeItem($actual);
-		Assert::equal($expected, $this->repository->findAll());
+		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 	}
 
 	public function provideRemoveItemData()
