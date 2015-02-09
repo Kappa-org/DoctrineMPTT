@@ -10,15 +10,18 @@
 
 namespace Kappa\DoctrineMPTT\Queries;
 
+use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Kappa\Doctrine\Queries\ExecutableCollection;
 use Kappa\DoctrineMPTT\Configurator;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
+use Kappa\DoctrineMPTT\MissingConfiguratorException;
 use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\DeleteItemQuery;
 use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\MoveUpdate;
 use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateLeftForDelete;
 use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateLeftForInsertItem;
 use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateRightForDelete;
 use Kappa\DoctrineMPTT\Queries\Objects\Manipulators\UpdateRightForInsertItem;
+use Kdyby\Doctrine\EntityManager;
 
 /**
  * Class QueriesCollection
@@ -31,11 +34,21 @@ class QueriesCollector
 	/** @var Configurator */
 	private $configurator;
 
+	/** @var bool */
+	private $isMysql;
+
 	/**
 	 * @param Configurator $configurator
 	 */
-	public function __construct(Configurator $configurator = null)
+	public function __construct(EntityManager $entityManager, Configurator $configurator = null)
 	{
+		$driver = $entityManager->getConnection()->getDriver();
+		if ($driver instanceof AbstractMySQLDriver) {
+			$this->isMysql = true;
+		} else {
+			$this->isMysql = false;
+		}
+
 		$this->configurator = $configurator;
 	}
 
@@ -91,7 +104,7 @@ class QueriesCollector
 	public function getMoveItemQueries($actual, $depth, $move, $min_left, $max_right, $difference)
 	{
 		$collection = new ExecutableCollection([
-			new MoveUpdate($this->getConfigurator(), $actual, $depth, $move, $min_left, $max_right, $difference)
+			new MoveUpdate($this->getConfigurator(), $this->isMysql, $actual, $depth, $move, $min_left, $max_right, $difference)
 		]);
 
 		return $collection;

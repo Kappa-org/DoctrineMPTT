@@ -30,6 +30,9 @@ class MoveUpdate implements Executable
 	/** @var TraversableInterface */
 	private $actual;
 
+	/** @var bool */
+	private $isMysql;
+
 	/** @var int */
 	private $depth;
 
@@ -39,14 +42,9 @@ class MoveUpdate implements Executable
 	/** @var int */
 	private $min_left;
 
-	/** @var int */
-	private $max_right;
-
-	/** @var int */
-	private $difference;
-
 	/**
 	 * @param Configurator $configurator
+	 * @param bool $isMysql
 	 * @param TraversableInterface $actual
 	 * @param int $depth
 	 * @param int $move
@@ -54,9 +52,10 @@ class MoveUpdate implements Executable
 	 * @param int $max_right
 	 * @param int $difference
 	 */
-	public function __construct(Configurator $configurator, TraversableInterface $actual, $depth, $move, $min_left, $max_right, $difference)
+	public function __construct(Configurator $configurator, $isMysql, TraversableInterface $actual, $depth, $move, $min_left, $max_right, $difference)
 	{
 		$this->configurator = $configurator;
+		$this->isMysql = $isMysql;
 		$this->actual = $actual;
 		$this->depth = $depth;
 		$this->move = $move;
@@ -64,6 +63,12 @@ class MoveUpdate implements Executable
 		$this->max_right = $max_right;
 		$this->difference = $difference;
 	}
+
+	/** @var int */
+	private $max_right;
+
+	/** @var int */
+	private $difference;
 
 	/**
 	 * @param QueryBuilder $queryBuilder
@@ -93,9 +98,13 @@ class MoveUpdate implements Executable
 		$queryBuilder->update($class, 'e')
 			->set($stringComposer->compose('e.:depthName:'), $stringComposer->compose('e.:depthName: + (CASE WHEN e.:leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :addDepth: ELSE 0 END)'))
 			->set($stringComposer->compose('e.:leftName:'), $stringComposer->compose('e.:leftName: + (CASE WHEN e.:leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:leftName: >= :minLeft: THEN :difference: ELSE 0 END) END)'))
-			->set($stringComposer->compose('e.:rightName:'), $stringComposer->compose('e.:rightName: + (CASE WHEN e.:_leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:rightName: <= :maxRight: THEN :difference: ELSE 0 END) END)'))
-			->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:_leftName: + (CASE WHEN e.:_leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:_leftName: >= :minLeft: THEN :difference: ELSE 0 END) END)'))
-			->where('e.rgt >= ?0')
+			->set($stringComposer->compose('e.:rightName:'), $stringComposer->compose('e.:rightName: + (CASE WHEN e.:_leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:rightName: <= :maxRight: THEN :difference: ELSE 0 END) END)'));
+		if ($this->isMysql) {
+			$queryBuilder->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:leftName:'));
+		} else {
+			$queryBuilder->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:_leftName: + (CASE WHEN e.:_leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:_leftName: >= :minLeft: THEN :difference: ELSE 0 END) END)'));
+		}
+			$queryBuilder->where('e.rgt >= ?0')
 			->andWhere('e.lft <= ?1')
 			->setParameters([$this->min_left, $this->max_right]);
 
