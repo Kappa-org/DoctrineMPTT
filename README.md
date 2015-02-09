@@ -23,6 +23,14 @@ extensions:
     doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
 ```
 
+## Benefits
+
+1. Minimize count of queries. For delete is needed 3 queries (1x `DELETE`, 2x `UPDATE`), for 
+create is needed 3 queries (1x `INSERT`, 2x `UPDATE`) and for move item is needed only 1 `UPDATE`
+query. This algorithm is much faster and more fuel efficient than other commonly used methods, such as
+classical parent - children method.
+2. Full control over the nesting depth or count of branches
+
 ## Restrictions and warnings
 
 1. This package was be tested on MySQL, SQLite and PostgreSQL and it is compatible with them
