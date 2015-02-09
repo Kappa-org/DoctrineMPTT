@@ -9,5 +9,5 @@ extensions:
 doctrine:
 	user: root
 	password:
-	dbname: test
+	dbname: doctrime_mptt_test
 	driver: pdo_mysql

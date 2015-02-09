@@ -7,7 +7,7 @@ extensions:
 	- Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
 
 doctrine:
-	user: root
+	user: postgres
 	password:
-	dbname: test
+	dbname: doctrime_mptt_test
 	driver: pdo_pgsql

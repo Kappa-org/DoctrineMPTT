@@ -15,7 +15,8 @@ env:
 before_script:
         - composer self-update
         - composer install --prefer-source
-        - mysql -u root < ./tests/data/database.sql
+        - mysql -e 'create database doctrime_mptt_test;'
+        - psql -c 'create database doctrime_mptt_test;' -U postgres
         - rm ./tests/data/config.neon
         - cp ./tests/data/config.travis.$DB.neon ./tests/data/config.neon
         - echo $DB
