@@ -50,20 +50,31 @@ Original tree structure
 
 `Kappa\DoctrineMPTT\TraversableManager` provides three methods by which we can do all operations.
 
-1. `insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh)` - First argument is 
-new parent and actual item (second argument) will be included under this parent item. Last argument is bool
-and if is set to `true` entities will be refreshed
-For example: This code generate next tree
+### Insert item
+
+`insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh)`
+
+First argument is new parent and actual item (second argument) will be included under this parent item. 
+Last argument is bool and if is set to `true` entities will be refreshed. For example: This code generate 
+next tree
+
 ```php
 $parent = $this->repository->find(4);
 $actual = new TraversableEntity();
 // ....
 $this->traversableManager->insertItem($parent, $actual);
 ```
+
 ![After insert](./docs/images/insertItem.png)
 
-2. `moveItem(TraversableInterface $actual, TraversableInterface $related, action, refresh)` - with this method
-you can move each item into new place (as predecessor or descendant). For example **predecessor**
+### Move item
+
+`moveItem(TraversableInterface $actual, TraversableInterface $related, action, refresh)` 
+
+With this method you can move each item into new place (as predecessor or descendant). 
+Last argument is bool and if is set to `true` entities will be refreshed.
+For example **predecessor**
+
 ```php
 // (1)
 $actual = $this->repository->find(3);
@@ -84,9 +95,13 @@ $this->traversableManager->moveItem($actual, $related, TraversableManager::DESCE
 
 ![After move predecessor](./docs/images/moveItemDescendant.png)
 
+### Remove item
 
-3. `removeItem(TraversableInterface $actual)` - removes item and all its children
+`removeItem(TraversableInterface $actual)` 
+
+Remove item and all its children
 For example:
+
 ```php
 $actual = $this->repository->find(2);
 $this->traversableManager->removeItem($actual);
