@@ -71,18 +71,18 @@ class TraversableManager
 	public function insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh = true)
 	{
 		$queriesCollection = $this->queriesCollector->getInsertItemQueries($parent);
-		$this->entityManager->transactional(function () use ($queriesCollection, $actual, $parent, $refresh) {
+		$this->entityManager->transactional(function () use ($queriesCollection, $actual, $parent) {
 			$this->executor->execute($queriesCollection);
 			$actual->setLeft($parent->getRight())
 				->setRight($parent->getRight() + 1)
 				->setDepth($parent->getDepth() + 1);
 			$this->entityManager->persist($actual);
 			$this->entityManager->flush();
-			if ($refresh) {
-				$this->entityManager->refresh($parent);
-				$this->entityManager->refresh($actual);
-			}
 		});
+		if ($refresh) {
+			$this->entityManager->refresh($parent);
+			$this->entityManager->refresh($actual);
+		}
 	}
 
 	/**
