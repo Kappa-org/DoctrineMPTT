@@ -26,6 +26,6 @@ if  [ $result = 1 ]; then
   done
 fi
 
-return $result
+exit $result
 
 
