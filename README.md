@@ -44,6 +44,56 @@ requires methods and columns.
 
 ### Manager
 
+Original tree structure
+
+![Original](./docs/images/original.png)
+
+`Kappa\DoctrineMPTT\TraversableManager` provides three methods by which we can do all operations.
+
+1. `insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh)` - First argument is 
+new parent and actual item (second argument) will be included under this parent item. Last argument is bool
+and if is set to `true` entities will be refreshed
+For example: This code generate next tree
+```php
+$parent = $this->repository->find(4);
+$actual = new TraversableEntity();
+// ....
+$this->traversableManager->insertItem($parent, $actual);
+```
+![After insert](./docs/images/insertItem.png)
+
+2. `moveItem(TraversableInterface $actual, TraversableInterface $related, action, refresh)` - with this method
+you can move each item into new place (as predecessor or descendant). For example **predecessor**
+```php
+// (1)
+$actual = $this->repository->find(3);
+$related = $this->repository->find(2);
+$this->traversableManager->moveItem($actual, $related, TraversableManager::PREDECESSOR); // (1) - move actual before related
+
+// (2)
+$actual = $this->repository->find(3);
+$related = $this->repository->find(4);
+$this->traversableManager->moveItem($actual, $related, TraversableManager::DESCENDANT); // (2) - move actual as child of related
+```
+
+**(1) Result**
+
+![After move predecessor](./docs/images/moveItemPredecessor.png)
+
+**(2) Result**
+
+![After move predecessor](./docs/images/moveItemDescendant.png)
+
+
+3. `removeItem(TraversableInterface $actual)` - removes item and all its children
+For example:
+```php
+$actual = $this->repository->find(2);
+$this->traversableManager->removeItem($actual);
+```
+
+![After delete](./docs/images/removeItem.png)
+
 ### Queries
 
 1. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll` - returns all items sorted for scalable listing
