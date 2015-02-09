@@ -50,7 +50,7 @@ Original tree structure
 
 `Kappa\DoctrineMPTT\TraversableManager` provides three methods by which we can do all operations.
 
-### Insert item
+#### Insert item
 
 `insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh)`
 
@@ -67,7 +67,7 @@ $this->traversableManager->insertItem($parent, $actual);
 
 ![After insert](./docs/images/insertItem.png)
 
-### Move item
+#### Move item
 
 `moveItem(TraversableInterface $actual, TraversableInterface $related, action, refresh)` 
 
@@ -95,7 +95,7 @@ $this->traversableManager->moveItem($actual, $related, TraversableManager::DESCE
 
 ![After move predecessor](./docs/images/moveItemDescendant.png)
 
-### Remove item
+#### Remove item
 
 `removeItem(TraversableInterface $actual)` 
 
