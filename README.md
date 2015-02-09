@@ -40,6 +40,21 @@ classical parent - children method.
 `moveItem()` or `insertItem()` you should refresh loaded entities. **Attention! you must save all
 updates before call this methods to avoids conflicts**
 
+## Configuration
+
+You can set custom names for used columns:
+
+```yaml
+doctrineMPTT:
+        entityClass: 'Your entity',
+		originalLeftName: '_lft',
+		leftColumnName: 'lft',
+		rightColumnName: 'rgt',
+		depthColumnName: 'depth'
+```
+
+Configuration may not be in config file but can be set `Kappa\DoctrineMPTT\TraversableManager::setConfigurator`.
+
 ## Usages
 
 Package provide main `Kappa\DoctrineMPTT\TraversableManager` which can be used for all manipulations.
