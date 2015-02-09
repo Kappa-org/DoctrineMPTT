@@ -53,7 +53,7 @@ class UpdateLeftForInsertItem implements Executable
 		$class = $this->configurator->get(Configurator::ENTITY_CLASS);
 		$queryBuilder->update($class, 'e')
 			->set($stringComposer->compose('e.:leftName'), $stringComposer->compose('e.:leftName + 2'))
-			->set($stringComposer->compose('e.:originalLeftName'), $stringComposer->compose('e.:leftName'))
+			->set($stringComposer->compose('e.:originalLeftName'), $stringComposer->compose('e.:originalLeftName + 2'))
 			->where($stringComposer->compose('e.:leftName') . ' > :parentRight')
 			->setParameter('parentRight', $this->related->getRight());
 
