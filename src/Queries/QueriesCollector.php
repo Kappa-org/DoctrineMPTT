@@ -38,16 +38,13 @@ class QueriesCollector
 	private $isMysql;
 
 	/**
+	 * @param EntityManager $entityManager
 	 * @param Configurator $configurator
 	 */
 	public function __construct(EntityManager $entityManager, Configurator $configurator = null)
 	{
 		$driver = $entityManager->getConnection()->getDriver();
-		if ($driver instanceof AbstractMySQLDriver) {
-			$this->isMysql = true;
-		} else {
-			$this->isMysql = false;
-		}
+		$this->isMysql = $driver instanceof AbstractMySQLDriver;
 
 		$this->configurator = $configurator;
 	}
