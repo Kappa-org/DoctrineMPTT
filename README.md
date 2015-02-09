@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/Kappa-org/DoctrineMPTT.svg?branch=master)](https://travis-ci.org/Kappa-org/DoctrineMPTT)
 
-Modified Pre-order Tree Traversal doctrine implementation
+Modified Pre-order Tree Traversal doctrine implementation.
+
+[http://www.sitepoint.com/series/storing-hierarchical-data-in-a-database/](http://www.sitepoint.com/series/storing-hierarchical-data-in-a-database/)
 
 ## Requirements
 
