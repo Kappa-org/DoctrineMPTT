@@ -1,5 +1,7 @@
 # Kappa\DoctrineMPTT
 
+[![Build Status](https://travis-ci.org/Kappa-org/DoctrineMPTT.svg?branch=master)](https://travis-ci.org/Kappa-org/DoctrineMPTT)
+
 Modified Pre-order Tree Traversal doctrine implementation
 
 ## Requirements
