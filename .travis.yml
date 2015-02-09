@@ -20,3 +20,6 @@ before_script:
         - rm ./tests/data/config.neon
         - cp ./tests/data/config.travis.$DB.neon ./tests/data/config.neon
         - echo $DB
+
+after_failure:
+        - 'for i in $(find ./tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done'
