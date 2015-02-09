@@ -10,7 +10,7 @@
  * @testCase
  */
 
-namespace Kappa\DoctrineMPTT\Tests;
+namespace KappaTests\DoctrineMPTT\Queries\Selectors;
 
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParents;
 use KappaTests\DoctrineMPTT\Mocks\Entity;
