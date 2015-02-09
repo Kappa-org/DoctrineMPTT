@@ -94,7 +94,7 @@ class MoveUpdate implements Executable
 			->set($stringComposer->compose('e.:depthName:'), $stringComposer->compose('e.:depthName: + (CASE WHEN e.:leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :addDepth: ELSE 0 END)'))
 			->set($stringComposer->compose('e.:leftName:'), $stringComposer->compose('e.:leftName: + (CASE WHEN e.:leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:leftName: >= :minLeft: THEN :difference: ELSE 0 END) END)'))
 			->set($stringComposer->compose('e.:rightName:'), $stringComposer->compose('e.:rightName: + (CASE WHEN e.:_leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:rightName: <= :maxRight: THEN :difference: ELSE 0 END) END)'))
-			->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:leftName:'))
+			->set($stringComposer->compose('e.:_leftName:'), $stringComposer->compose('e.:_leftName: + (CASE WHEN e.:_leftName: >= :actualLeft: AND e.:rightName: <= :actualRight: THEN :move: ELSE (CASE WHEN e.:_leftName: >= :minLeft: THEN :difference: ELSE 0 END) END)'))
 			->where('e.rgt >= ?0')
 			->andWhere('e.lft <= ?1')
 			->setParameters([$this->min_left, $this->max_right]);
