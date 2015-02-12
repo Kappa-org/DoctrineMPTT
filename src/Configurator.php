@@ -69,7 +69,7 @@ class Configurator
 	 */
 	public function get($key)
 	{
-		if ($key === self::ENTITY_CLASS && (!isset($this->data[$key]) || !class_exists($this->data[$key]))) {
+		if ($key === self::ENTITY_CLASS && !isset($this->data[$key])) {
 			throw new MissingClassNamespaceException("You must set ENTITY_CLASS in " . __CLASS__);
 		}
 		return array_key_exists($key, $this->data) ? $this->data[$key] : NULL;
