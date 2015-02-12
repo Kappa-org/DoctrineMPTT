@@ -141,3 +141,5 @@ $this->traversableManager->removeItem($actual);
 3. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren` - returns all children for actual item
 4. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetPrevious` - return previous item
 4. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetNext` - return next item
+
+You can use `Kappa\DoctrineMPTT\Queries\SelectorsCollector` as easier getter of query objects
