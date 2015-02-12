@@ -139,3 +139,5 @@ $this->traversableManager->removeItem($actual);
 1. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll` - returns all items sorted for scalable listing
 2. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParents` - returns all parents for actual item
 3. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren` - returns all children for actual item
+4. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetPrevious` - return previous item
+4. `Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetNext` - return next item
