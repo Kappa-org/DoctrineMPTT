@@ -37,7 +37,7 @@ class TraversableManagerTest extends ORMTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		$configurator = new Configurator();
+		$configurator = new Configurator($this->em);
 		$configurator->set(Configurator::ENTITY_CLASS, 'KappaTests\DoctrineMPTT\Mocks\Entity');
 		$queriesCollector = new QueriesCollector($this->em, $configurator);
 		$this->traversableManager = new TraversableManager($this->em, new QueryExecutor($this->em), $queriesCollector);

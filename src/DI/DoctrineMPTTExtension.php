@@ -35,7 +35,8 @@ class DoctrineMPTTExtension extends CompilerExtension
 		$config = $this->getConfig($this->defaultConfig);
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('configurator'))
-			->setClass('Kappa\DoctrineMPTT\Configurator', [$config]);
+			->setClass('Kappa\DoctrineMPTT\Configurator')
+			->addSetup('setData', [$config]);
 		$builder->addDefinition($this->prefix('queryCollector'))
 			->setClass('Kappa\DoctrineMPTT\Queries\QueriesCollector');
 		$builder->addDefinition($this->prefix('traversableManager'))

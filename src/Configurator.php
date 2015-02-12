@@ -10,6 +10,8 @@
 
 namespace Kappa\DoctrineMPTT;
 
+use Kdyby\Doctrine\EntityManager;
+
 /**
  * Class Configurator
  *
@@ -30,21 +32,33 @@ class Configurator
 
 	/** @var array */
 	private $data = [
-		self::ENTITY_CLASS => '',
+		self::ENTITY_CLASS => null,
 		self::LEFT_NAME => 'lft',
 		self::ORIGINAL_LEFT_NAME => '_lft',
 		self::RIGHT_NAME => 'rgt',
 		self::DEPTH_NAME => 'depth'
 	];
 
+	/** @var \Kdyby\Doctrine\EntityManager */
+	private $entityManager;
+
+	/**
+	 * @param \Kdyby\Doctrine\EntityManager $entityManager
+	 */
+	public function __construct(EntityManager $entityManager)
+	{
+		$this->entityManager = $entityManager;
+	}
+
 	/**
 	 * @param array $data
+	 * @return $this
 	 */
-	public function __construct(array $data = null)
+	public function setData(array $data)
 	{
-		if ($data !== null) {
-			$this->data = $data;
-		}
+		$this->data = $data;
+
+		return $this;
 	}
 
 	/**
@@ -69,9 +83,17 @@ class Configurator
 	 */
 	public function get($key)
 	{
-		if ($key === self::ENTITY_CLASS && !isset($this->data[$key])) {
+		if ($key === self::ENTITY_CLASS && !array_key_exists($key, $this->data)) {
 			throw new MissingClassNamespaceException("You must set ENTITY_CLASS in " . __CLASS__);
 		}
-		return array_key_exists($key, $this->data) ? $this->data[$key] : NULL;
+		if (array_key_exists($key, $this->data)) {
+			if ($key == self::ENTITY_CLASS && $this->data[$key] != null) {
+				return $this->entityManager->getClassMetadata($this->data[$key])->getName();
+			}
+
+			return $this->data[$key];
+		} else {
+			return null;
+		}
 	}
 }
