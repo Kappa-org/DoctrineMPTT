@@ -31,9 +31,6 @@ class TraversableManager
 	/** @var EntityManager */
 	private $entityManager;
 
-	/** @var Configurator */
-	private $configurator;
-
 	/** @var QueryExecutor */
 	private $executor;
 
@@ -61,6 +58,14 @@ class TraversableManager
 		$this->queriesCollector->setConfigurator($configurator);
 
 		return $this;
+	}
+
+	/**
+	 * @return Configurator
+	 */
+	public function getConfigurator()
+	{
+		return $this->queriesCollector->getConfigurator();
 	}
 
 	/**
