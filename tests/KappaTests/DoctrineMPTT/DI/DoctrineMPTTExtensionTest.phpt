@@ -50,6 +50,12 @@ class DoctrineMPTTExtensionTest extends DITestCase
 		Assert::same('rgt', $configurator->get(Configurator::RIGHT_NAME));
 		Assert::same('depth', $configurator->get(Configurator::DEPTH_NAME));
 	}
+
+	public function testSelectorsCollector()
+	{
+		$type = 'Kappa\DoctrineMPTT\Queries\SelectorsCollector';
+		Assert::type($type, $this->container->getByType($type));
+	}
 }
 
 \run(new DoctrineMPTTExtensionTest());

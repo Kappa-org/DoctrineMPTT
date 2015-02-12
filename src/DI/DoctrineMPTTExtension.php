@@ -40,5 +40,7 @@ class DoctrineMPTTExtension extends CompilerExtension
 			->setClass('Kappa\DoctrineMPTT\Queries\QueriesCollector');
 		$builder->addDefinition($this->prefix('traversableManager'))
 			->setClass('Kappa\DoctrineMPTT\TraversableManager');
+		$builder->addDefinition($this->prefix('selectorsCollector'))
+			->setClass('Kappa\DoctrineMPTT\Queries\SelectorsCollector');
 	}
 }
