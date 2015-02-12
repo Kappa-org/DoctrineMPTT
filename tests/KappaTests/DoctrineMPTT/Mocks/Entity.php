@@ -33,6 +33,14 @@ class Entity extends BaseEntity implements TraversableInterface
 	private $id;
 
 	/**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
 	 * @param int $left
 	 * @param int $right
 	 * @param int $depth
