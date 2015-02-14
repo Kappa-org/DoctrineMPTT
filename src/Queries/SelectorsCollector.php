@@ -15,6 +15,7 @@ use Kappa\DoctrineMPTT\Entities\TraversableInterface;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetNext;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParents;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetPrevious;
 
@@ -79,5 +80,14 @@ class SelectorsCollector
 	public function getPrevious(TraversableInterface $actual)
 	{
 		return new GetPrevious($this->configurator, $actual);
+	}
+
+	/**
+	 * @param TraversableInterface $actual
+	 * @return GetParent
+	 */
+	public function getParent(TraversableInterface $actual)
+	{
+		return new GetParent($this->configurator, $actual);
 	}
 }
