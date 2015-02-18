@@ -18,6 +18,7 @@ use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetNext;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParents;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetPrevious;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetRoot;
 
 /**
  * Class SelectorsCollector
@@ -89,5 +90,10 @@ class SelectorsCollector
 	public function getParent(TraversableInterface $actual)
 	{
 		return new GetParent($this->configurator, $actual);
+	}
+
+	public function getRoot()
+	{
+		return new GetRoot($this->configurator);
 	}
 }
