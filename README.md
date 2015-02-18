@@ -47,11 +47,11 @@ You can set custom names for used columns:
 
 ```yaml
 doctrineMPTT:
-        entityClass: 'Your entity',
-		originalLeftName: '_lft',
-		leftColumnName: 'lft',
-		rightColumnName: 'rgt',
-		depthColumnName: 'depth'
+        entityClass: Your\entity
+		originalLeftName: _lft
+		leftColumnName: lft
+		rightColumnName: rgt
+		depthColumnName: depth
 ```
 
 Configuration may not be in config file but can be set `Kappa\DoctrineMPTT\TraversableManager::setConfigurator`.
