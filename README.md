@@ -22,6 +22,7 @@ and register extension
 
 ```yaml
 extensions:
+    doctrine: Kappa\Doctrine\DI\DoctrineExtension
     doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
 ```
 
