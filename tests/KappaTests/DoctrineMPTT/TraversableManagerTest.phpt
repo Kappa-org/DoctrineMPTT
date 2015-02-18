@@ -47,7 +47,7 @@ class TraversableManagerTest extends ORMTestCase
 	{
 		$this->sqlLogger->startSection();
 		$parent = $this->repository->find(2);
-		$this->traversableManager->insertItem($parent, new Entity());
+		$this->traversableManager->insertItem(new Entity(), $parent);
 		$expected = [
 			Entity::createWithId(1, 1, 20, 0),
 			Entity::createWithId(2, 2, 7, 1),
@@ -62,6 +62,45 @@ class TraversableManagerTest extends ORMTestCase
 		];
 		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 		$this->sqlLogger->stopSection();
+	}
+
+	public function testInsertWithoutParent()
+	{
+		$this->sqlLogger->startSection();
+		$this->traversableManager->insertItem(new Entity());
+		$expected = [
+			Entity::createWithId(1, 1, 20, 0),
+			Entity::createWithId(2, 2, 5, 1),
+			Entity::createWithId(3, 6, 15, 1),
+			Entity::createWithId(4, 16, 17, 1),
+			Entity::createWithId(5, 3, 4, 2),
+			Entity::createWithId(6, 7, 8, 2),
+			Entity::createWithId(7, 9, 10, 2),
+			Entity::createWithId(8, 11, 14, 2),
+			Entity::createWithId(9, 12, 13, 3),
+			Entity::createWithId(10, 18, 19, 1),
+		];
+		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
+		$this->sqlLogger->stopSection();
+	}
+
+	public function testInsertItemAsRoot()
+	{
+		$entities = $this->repository->findAll();
+		foreach ($entities as $entity) {
+			$this->em->remove($entities);
+		}
+		$this->em->flush();
+		Assert::count(0, $this->repository->findAll());
+		$this->sqlLogger->startSection();
+		$this->traversableManager->insertItem(new Entity());
+		$this->sqlLogger->stopSection();
+		$entities = $this->repository->findAll();
+		Assert::count(1, $entities);
+		$entity = $entities[0];
+		Assert::same(1, $entity->getLeft());
+		Assert::same(2, $entity->getRight());
+		Assert::same(0, $entity->getDepth());
 	}
 
 	/**

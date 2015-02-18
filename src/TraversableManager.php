@@ -13,6 +13,7 @@ namespace Kappa\DoctrineMPTT;
 use Kappa\Doctrine\InvalidArgumentException;
 use Kappa\Doctrine\Queries\QueryExecutor;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetRoot;
 use Kappa\DoctrineMPTT\Queries\QueriesCollector;
 use Kdyby\Doctrine\EntityManager;
 
@@ -69,23 +70,39 @@ class TraversableManager
 	}
 
 	/**
-	 * @param TraversableInterface $parent
 	 * @param TraversableInterface $actual
+	 * @param TraversableInterface $parent
 	 * @param bool $refresh
 	 */
-	public function insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh = true)
+	public function insertItem(TraversableInterface $actual, TraversableInterface $parent = null, $refresh = true)
 	{
-		$queriesCollection = $this->queriesCollector->getInsertItemQueries($parent);
-		$this->entityManager->transactional(function () use ($queriesCollection, $actual, $parent) {
-			$this->executor->execute($queriesCollection);
-			$actual->setLeft($parent->getRight())
-				->setRight($parent->getRight() + 1)
-				->setDepth($parent->getDepth() + 1);
-			$this->entityManager->persist($actual);
-			$this->entityManager->flush();
-		});
+		if ($parent === null) {
+			$repository = $this->entityManager->getRepository(get_class($actual));
+			$parent = $repository->fetchOne(new GetRoot($this->getConfigurator()));
+		}
+		if (!$parent) {
+			$this->entityManager->transactional(function () use ($actual) {
+				$actual->setLeft(1)
+					->setRight(2)
+					->setDepth(0);
+				$this->entityManager->persist($actual);
+				$this->entityManager->flush();
+			});
+		} else {
+			$queriesCollection = $this->queriesCollector->getInsertItemQueries($parent);
+			$this->entityManager->transactional(function () use ($queriesCollection, $actual, $parent) {
+				$this->executor->execute($queriesCollection);
+				$actual->setLeft($parent->getRight())
+					->setRight($parent->getRight() + 1)
+					->setDepth($parent->getDepth() + 1);
+				$this->entityManager->persist($actual);
+				$this->entityManager->flush();
+			});
+		}
 		if ($refresh) {
-			$this->entityManager->refresh($parent);
+			if ($parent) {
+				$this->entityManager->refresh($parent);
+			}
 			$this->entityManager->refresh($actual);
 		}
 	}
