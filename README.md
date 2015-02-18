@@ -78,9 +78,9 @@ Original tree structure
 
 #### Insert item
 
-`insertItem(TraversableInterface $parent, TraversableInterface $actual, $refresh)`
+`insertItem(TraversableInterface $actual, TraversableInterface $parent = null, $refresh)`
 
-First argument is new parent and actual item (second argument) will be included under this parent item. 
+Second argument is new parent and actual item (first argument) will be included under this parent item. 
 Last argument is bool and if is set to `true` entities will be refreshed. For example: This code generate 
 next tree
 
@@ -92,6 +92,9 @@ $this->traversableManager->insertItem($parent, $actual);
 ```
 
 ![After insert](./docs/images/insertItem.png)
+
+If is parent null, actual item will be inserted as last child of root element if it exist. If not exist root
+element actual item will be inserted as root. 
 
 #### Move item
 
