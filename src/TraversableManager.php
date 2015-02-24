@@ -10,7 +10,6 @@
 
 namespace Kappa\DoctrineMPTT;
 
-use Kappa\Doctrine\InvalidArgumentException;
 use Kappa\Doctrine\Queries\QueryExecutor;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetRoot;
@@ -114,11 +113,21 @@ class TraversableManager
 	 * @param bool $refresh
 	 * @throws \InvalidArgumentException
 	 */
-	public function moveItem(TraversableInterface $actual, TraversableInterface $related, $moveType, $refresh = true)
+	public function moveItem(TraversableInterface $actual, TraversableInterface $related = null, $moveType, $refresh = true)
 	{
 		$constants = [self::DESCENDANT, self::PREDECESSOR];
 		if (!in_array($moveType, $constants)) {
 			throw new InvalidArgumentException('Type of move can be only ' . __CLASS__ . '::DESCENDANT or ' . __CLASS__ . '::PREDECESSOR');
+		}
+		if ($related === null && $moveType == self::PREDECESSOR) {
+			throw new InvalidArgumentException("Missing related item for PREDECESSOR move type");
+		}
+		if ($related === null) {
+			$repository = $this->entityManager->getRepository(get_class($actual));
+			$related = $repository->fetchOne(new GetRoot($this->getConfigurator()));
+		}
+		if ($related === null) {
+			throw new InvalidArgumentException("Missing related item");
 		}
 		$difference = $actual->getRight() - $actual->getLeft() + 1;
 		if ($moveType == self::PREDECESSOR) {

@@ -114,6 +114,10 @@ $this->traversableManager->moveItem($actual, $related, TraversableManager::PREDE
 $actual = $this->repository->find(3);
 $related = $this->repository->find(4);
 $this->traversableManager->moveItem($actual, $related, TraversableManager::DESCENDANT); // (2) - move actual as child of related
+
+// (3)
+$actual = $this->repository->find(3);
+$this->traversableManager->moveItem($actual, null, TraversableManager::DESCENDANT); // (3) - move actual as last child of root
 ```
 
 **(1) Result**
@@ -123,6 +127,10 @@ $this->traversableManager->moveItem($actual, $related, TraversableManager::DESCE
 **(2) Result**
 
 ![After move predecessor](./docs/images/moveItemDescendant.png)
+
+**(3) Result**
+
+![After move predecessor](./docs/images/moveItemDescendantNull.png)
 
 #### Remove item
 

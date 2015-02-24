@@ -114,7 +114,9 @@ class TraversableManagerTest extends ORMTestCase
 	{
 		$this->sqlLogger->startSection();
 		$actual = $this->repository->find($actual);
-		$related = $this->repository->find($related);
+		if ($related) {
+			$related = $this->repository->find($related);
+		}
 		$this->traversableManager->moveItem($actual, $related, $moveType);
 		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 		$this->sqlLogger->stopSection();
@@ -171,7 +173,25 @@ class TraversableManagerTest extends ORMTestCase
 				Entity::createWithId(8, 13, 16, 2),
 				Entity::createWithId(9, 14, 15, 3),
 			]],
+			[3, null, TraversableManager::DESCENDANT, [
+				Entity::createWithId(1, 1, 18, 0),
+				Entity::createWithId(2, 2, 5, 1),
+				Entity::createWithId(3, 8, 17, 1),
+				Entity::createWithId(4, 6, 7, 1),
+				Entity::createWithId(5, 3, 4, 2),
+				Entity::createWithId(6, 9, 10, 2),
+				Entity::createWithId(7, 11, 12, 2),
+				Entity::createWithId(8, 13, 16, 2),
+				Entity::createWithId(9, 14, 15, 3),
+			]],
 		];
+	}
+
+	public function testMissingRelatedItemForMoveItem()
+	{
+		Assert::exception(function () {
+			$this->traversableManager->moveItem($this->repository->find(1), null, TraversableManager::PREDECESSOR);
+		}, 'Kappa\DoctrineMPTT\InvalidArgumentException');
 	}
 
 	/**
