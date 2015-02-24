@@ -53,6 +53,7 @@ class GetChildren extends QueryObject
 		return $repository->createQueryBuilder('e')
 			->where($stringComposer->compose('e.:leftName: > ?0'))
 			->andWhere($stringComposer->compose('e.:rightName: < ?1'))
+			->orderBy($stringComposer->compose('e.:leftName:'), 'ASC')
 			->setParameters([
 				$this->actual->getLeft(),
 				$this->actual->getRight()
