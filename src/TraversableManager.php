@@ -15,6 +15,7 @@ use Kappa\DoctrineMPTT\Entities\TraversableInterface;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetRoot;
 use Kappa\DoctrineMPTT\Queries\QueriesCollector;
 use Kdyby\Doctrine\EntityManager;
+use Kdyby\Doctrine\EntityRepository;
 
 /**
  * Class TraversableManager
@@ -30,6 +31,9 @@ class TraversableManager
 
 	/** @var EntityManager */
 	private $entityManager;
+
+	/** @var EntityRepository|null */
+	private $repository = null;
 
 	/** @var QueryExecutor */
 	private $executor;
@@ -77,8 +81,7 @@ class TraversableManager
 	{
 		$parent = $this->getEntity($parent);
 		if ($parent === null) {
-			$repository = $this->entityManager->getRepository(get_class($actual));
-			$parent = $repository->fetchOne(new GetRoot($this->getConfigurator()));
+			$parent = $this->getRepository()->fetchOne(new GetRoot($this->getConfigurator()));
 		}
 		if (!$parent) {
 			$this->entityManager->transactional(function () use ($actual) {
@@ -126,8 +129,7 @@ class TraversableManager
 			throw new InvalidArgumentException("Missing related item for PREDECESSOR move type");
 		}
 		if ($related === null) {
-			$repository = $this->entityManager->getRepository(get_class($actual));
-			$related = $repository->fetchOne(new GetRoot($this->getConfigurator()));
+			$related = $this->getRepository()->fetchOne(new GetRoot($this->getConfigurator()));
 		}
 		if ($related === null) {
 			throw new InvalidArgumentException("Missing related item");
@@ -199,6 +201,10 @@ class TraversableManager
 	 */
 	private function getRepository()
 	{
-		return $this->entityManager->getRepository($this->getConfigurator()->get(Configurator::ENTITY_CLASS));
+		if (!$this->repository instanceof EntityRepository) {
+			$this->repository = $this->entityManager->getRepository($this->getConfigurator()->get(Configurator::ENTITY_CLASS));
+		}
+
+		return $this->repository;
 	}
 }
