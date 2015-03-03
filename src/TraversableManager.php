@@ -73,8 +73,9 @@ class TraversableManager
 	 * @param TraversableInterface $parent
 	 * @param bool $refresh
 	 */
-	public function insertItem(TraversableInterface $actual, TraversableInterface $parent = null, $refresh = true)
+	public function insertItem(TraversableInterface $actual, $parent = null, $refresh = true)
 	{
+		$parent = $this->getEntity($parent);
 		if ($parent === null) {
 			$repository = $this->entityManager->getRepository(get_class($actual));
 			$parent = $repository->fetchOne(new GetRoot($this->getConfigurator()));
@@ -107,14 +108,16 @@ class TraversableManager
 	}
 
 	/**
-	 * @param TraversableInterface $actual
-	 * @param TraversableInterface $related
+	 * @param TraversableInterface|int $actual
+	 * @param TraversableInterface|int $related
 	 * @param int $moveType
 	 * @param bool $refresh
 	 * @throws \InvalidArgumentException
 	 */
-	public function moveItem(TraversableInterface $actual, TraversableInterface $related = null, $moveType, $refresh = true)
+	public function moveItem($actual, $related = null, $moveType, $refresh = true)
 	{
+		$actual = $this->getEntity($actual);
+		$related = $this->getEntity($related);
 		$constants = [self::DESCENDANT, self::PREDECESSOR];
 		if (!in_array($moveType, $constants)) {
 			throw new InvalidArgumentException('Type of move can be only ' . __CLASS__ . '::DESCENDANT or ' . __CLASS__ . '::PREDECESSOR');
@@ -159,13 +162,43 @@ class TraversableManager
 	}
 
 	/**
-	 * @param TraversableInterface $actual
+	 * @param TraversableInterface|int $actual
 	 */
-	public function removeItem(TraversableInterface $actual)
+	public function removeItem($actual)
 	{
+		$actual = $this->getEntity($actual);
 		$queryCollection = $this->queriesCollector->getRemoveItemQueries($actual);
 		$this->entityManager->transactional(function () use ($queryCollection) {
 			$this->executor->execute($queryCollection);
 		});
+	}
+
+	/**
+	 * @param null|int|object $entity
+	 * @return null|object
+	 */
+	private function getEntity($entity = null)
+	{
+		if ($entity !== null) {
+			if (!is_object($entity)) {
+				$entity = $this->getRepository()->find($entity);
+				if (!$entity) {
+					throw new EntityNotFoundException("Entity " . $this->getRepository()->getClassName() . " with id '{$id}' has not been found");
+				}
+			}
+		}
+		if ($entity !== null && !$entity instanceof TraversableInterface) {
+			throw new InvalidStateException("Entity must implements TraversableInterface");
+		}
+
+		return $entity;
+	}
+
+	/**
+	 * @return \Kdyby\Doctrine\EntityRepository
+	 */
+	private function getRepository()
+	{
+		return $this->entityManager->getRepository($this->getConfigurator()->get(Configurator::ENTITY_CLASS));
 	}
 }

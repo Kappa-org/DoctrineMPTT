@@ -43,45 +43,64 @@ class TraversableManagerTest extends ORMTestCase
 		$this->traversableManager = new TraversableManager($this->em, new QueryExecutor($this->em), $queriesCollector);
 	}
 
-	public function testInsertItem()
+	/**
+	 * @param int|null $parentId
+	 * @param array $expected
+	 * @dataProvider provideInsertItemData
+	 */
+	public function testInsertItemByEntity($parentId, array $expected)
 	{
 		$this->sqlLogger->startSection();
-		$parent = $this->repository->find(2);
+		if ($parentId) {
+			$parent = $this->repository->find(2);
+		} else {
+			$parent = $parentId;
+		}
 		$this->traversableManager->insertItem(new Entity(), $parent);
-		$expected = [
-			Entity::createWithId(1, 1, 20, 0),
-			Entity::createWithId(2, 2, 7, 1),
-			Entity::createWithId(3, 8, 17, 1),
-			Entity::createWithId(4, 18, 19, 1),
-			Entity::createWithId(5, 3, 4, 2),
-			Entity::createWithId(6, 9, 10, 2),
-			Entity::createWithId(7, 11, 12, 2),
-			Entity::createWithId(8, 13, 16, 2),
-			Entity::createWithId(9, 14, 15, 3),
-			Entity::createWithId(10, 5, 6, 2),
-		];
 		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 		$this->sqlLogger->stopSection();
 	}
 
-	public function testInsertWithoutParent()
+	/**
+	 * @param int|null $parent
+	 * @param array $expected
+	 * @dataProvider provideInsertItemData
+	 */
+	public function testInsertItemById($parent, array $expected)
 	{
 		$this->sqlLogger->startSection();
-		$this->traversableManager->insertItem(new Entity());
-		$expected = [
-			Entity::createWithId(1, 1, 20, 0),
-			Entity::createWithId(2, 2, 5, 1),
-			Entity::createWithId(3, 6, 15, 1),
-			Entity::createWithId(4, 16, 17, 1),
-			Entity::createWithId(5, 3, 4, 2),
-			Entity::createWithId(6, 7, 8, 2),
-			Entity::createWithId(7, 9, 10, 2),
-			Entity::createWithId(8, 11, 14, 2),
-			Entity::createWithId(9, 12, 13, 3),
-			Entity::createWithId(10, 18, 19, 1),
-		];
+		$this->traversableManager->insertItem(new Entity(), $parent);
 		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 		$this->sqlLogger->stopSection();
+	}
+
+	public function provideInsertItemData()
+	{
+		// [parentId, expected]
+		return [
+			[2, [
+				Entity::createWithId(1, 1, 20, 0),
+				Entity::createWithId(2, 2, 7, 1),
+				Entity::createWithId(3, 8, 17, 1),
+				Entity::createWithId(4, 18, 19, 1),
+				Entity::createWithId(5, 3, 4, 2),
+				Entity::createWithId(6, 9, 10, 2),
+				Entity::createWithId(7, 11, 12, 2),
+				Entity::createWithId(8, 13, 16, 2),
+				Entity::createWithId(9, 14, 15, 3),
+				Entity::createWithId(10, 5, 6, 2),
+			]],
+			[null, [Entity::createWithId(1, 1, 20, 0),
+				Entity::createWithId(2, 2, 5, 1),
+				Entity::createWithId(3, 6, 15, 1),
+				Entity::createWithId(4, 16, 17, 1),
+				Entity::createWithId(5, 3, 4, 2),
+				Entity::createWithId(6, 7, 8, 2),
+				Entity::createWithId(7, 9, 10, 2),
+				Entity::createWithId(8, 11, 14, 2),
+				Entity::createWithId(9, 12, 13, 3),
+				Entity::createWithId(10, 18, 19, 1),]]
+		];
 	}
 
 	public function testInsertItemAsRoot()
@@ -110,13 +129,28 @@ class TraversableManagerTest extends ORMTestCase
 	 * @param array $expected
 	 * @dataProvider provideMoveItemData
 	 */
-	public function testMoveItem($actual, $related, $moveType, array $expected)
+	public function testMoveItemByEntity($actual, $related, $moveType, array $expected)
 	{
 		$this->sqlLogger->startSection();
 		$actual = $this->repository->find($actual);
 		if ($related) {
 			$related = $this->repository->find($related);
 		}
+		$this->traversableManager->moveItem($actual, $related, $moveType);
+		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
+		$this->sqlLogger->stopSection();
+	}
+
+	/**
+	 * @param int $actual
+	 * @param int $related
+	 * @param int $moveType
+	 * @param array $expected
+	 * @dataProvider provideMoveItemData
+	 */
+	public function testMoveItemById($actual, $related, $moveType, array $expected)
+	{
+		$this->sqlLogger->startSection();
 		$this->traversableManager->moveItem($actual, $related, $moveType);
 		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 		$this->sqlLogger->stopSection();
@@ -199,10 +233,21 @@ class TraversableManagerTest extends ORMTestCase
 	 * @param array$expected
 	 * @dataProvider provideRemoveItemData
 	 */
-	public function testRemoveItem($id, array $expected)
+	public function testRemoveItemByEntity($id, array $expected)
 	{
 		$actual = $this->repository->find($id);
 		$this->traversableManager->removeItem($actual);
+		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
+	}
+
+	/**
+	 * @param int $id
+	 * @param array$expected
+	 * @dataProvider provideRemoveItemData
+	 */
+	public function testRemoveItemById($id, array $expected)
+	{
+		$this->traversableManager->removeItem($id);
 		Assert::equal($expected, $this->repository->findBy([], ['id' => 'ASC']));
 	}
 
