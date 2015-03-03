@@ -42,3 +42,14 @@ class InvalidArgumentException extends \LogicException
 {
 
 }
+
+/**
+ * Class EntityNotFoundException
+ *
+ * @package Kappa\DoctrineMPTT
+ * @author Ondřej Záruba <http://zaruba-ondrej.cz>
+ */
+class EntityNotFoundException extends \LogicException
+{
+
+}
