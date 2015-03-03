@@ -53,3 +53,14 @@ class EntityNotFoundException extends \LogicException
 {
 
 }
+
+/**
+ * Class InvalidStateException
+ *
+ * @package Kappa\DoctrineMPTT
+ * @author Ondřej Záruba <http://zaruba-ondrej.cz>
+ */
+class InvalidStateException extends \LogicException
+{
+
+}
